@@ -1,0 +1,19 @@
+﻿using System;
+using System.ComponentModel;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using System.Collections.Generic;
+using System.Globalization;
+
+namespace ##NAMESPACE##
+{
+	##ELEMENTNAMESPACE##
+	public class ##ELEMENTNAME##
+	{
+		##ATTRIBUTES##
+		##ELEMENTS##
+		// CONSTRUCTOR
+		public ##ELEMENTNAME##()
+		{}
+	}
+}
