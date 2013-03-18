@@ -63,6 +63,11 @@ To contact me you can send an email to glenb [at] rubixcode.co.za
 
 Change Log
 ==========
+0.0.0.4 - 18 March 2013
+ - Fixed a number of bugs (done in a hurry, so code is sh1t, needs a cleanup badly)
+ - Added some user-ability
+ - Added initial integration for namespaces, plenty research still to be done
+
 0.0.0.3 - 11 Mar 2013
  - Fixed bug in the DateTime Attribute
  - Fixed bug in the Boolean Attribute
