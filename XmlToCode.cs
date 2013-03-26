@@ -92,7 +92,7 @@ namespace XmlToSerialisableClass
 
 			foreach (var xAttribute in element.Attributes())
 			{
-				var tElements = _oldRoot.Descendants(element.Name).Where(x => GetParentsAsString(x, -1) == GetParentsAsString(element, -1));
+				var tElements = _oldRoot.DescendantsAndSelf(element.Name).Where(x => GetParentsAsString(x, -1) == GetParentsAsString(element, -1)).ToList();
 				
 				var xAttr = xAttribute;
 				var attributeValues = tElements.Select(tElement => tElement.Attribute(xAttr.Name)).Select(attribute => attribute != null ? attribute.Value : "").ToList();
@@ -158,7 +158,35 @@ namespace XmlToSerialisableClass
 
 				if (tempElement == null) // element missing, add it
 				{
-					tempElement = (Element)Activator.CreateInstance(cElement.GetType(), cElement.Name);
+                    var elementName = cElement.Name;
+                    switch(cElement.Type.type)
+                    {
+                        case DataType.Type.Date:
+                            tempElement = new DateTimeElement(elementName, _dateFormat);
+                            break;
+                        case DataType.Type.DateTime:
+                            tempElement = new DateTimeElement(elementName, _dateTimeFormat);
+                            break;
+                        case DataType.Type.Bool:
+                            tempElement = new BoolElement(elementName, "True", "False");
+                            break;
+                        case DataType.Type.@bool:
+                            tempElement = new BoolElement(elementName, "true", "false");
+                            break;
+                        case DataType.Type.@int:
+                            tempElement = new IntElement(elementName);
+                            break;
+                        case DataType.Type.@decimal:
+                            tempElement = new DecimalElement(elementName);
+                            break;
+                        case DataType.Type.@string:
+                            tempElement = new StringElement(elementName);
+                            break;
+                        default:
+                            tempElement = new Element(elementName);
+                            break;
+                    }
+
 					tempElement.Enumerable = cElement.Enumerable;
 					tempElement.Type = cElement.Type;
 					tempElement.OriginalElement = cElement.OriginalElement;

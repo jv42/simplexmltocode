@@ -145,5 +145,28 @@ namespace XmlToSerialisableClass
 
 			return returnType;
 		}
+
+	    private bool Equals(DataType other)
+	    {
+	        if (ReferenceEquals(null, other)) return false;
+	        if (ReferenceEquals(this, other)) return true;
+	        return other.nullable.Equals(nullable) && other.type.Equals(type);
+	    }
+
+	    public override bool Equals(object obj)
+	    {
+	        if (ReferenceEquals(null, obj)) return false;
+	        if (ReferenceEquals(this, obj)) return true;
+	        if (obj.GetType() != typeof (DataType)) return false;
+	        return Equals((DataType) obj);
+	    }
+
+	    public override int GetHashCode()
+	    {
+	        unchecked
+	        {
+	            return (nullable.GetHashCode()*397) ^ (type.HasValue ? type.Value.GetHashCode() : 0);
+	        }
+	    }
 	}
 }

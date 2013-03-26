@@ -63,6 +63,11 @@ To contact me you can send an email to glenb [at] rubixcode.co.za
 
 Change Log
 ==========
+0.0.0.5 - 26 March 2013
+ - Fixed some bugs in the conversion algorithym
+ - Fixed a bug in the boolean attribute
+ - Fixed a bug in the DataTime element
+
 0.0.0.4 - 18 March 2013
  - Fixed a number of bugs (done in a hurry, so code is sh1t, needs a cleanup badly)
  - Added some user-ability

@@ -34,7 +34,7 @@ namespace XmlToSerialisableClass.Attributes
 			}
 			else
 			{
-				strBuilder.AppendLine(string.Format("get {{ return {0} ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
+				strBuilder.AppendLine(string.Format("get {{ return {0} ? \"{1}\" : \"{2}\"; }}", Name, _trueValue, _falseValue));
 				strBuilder.AppendLine(string.Format("set {{ {0} = value == \"{1}\"; }}", Name, _trueValue));
 			}
 
