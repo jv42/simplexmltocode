@@ -16,7 +16,7 @@ namespace XmlToSerialisableClass.Attributes
 			{
 				strBuilder.AppendLine(string.Format("[XmlIgnore]"));
 				strBuilder.AppendLine(string.Format("public int? {0} {{ get; set; }}", Name));
-				strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", Name));
+				strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", XmlName));
 				strBuilder.AppendLine(string.Format("public string {0}String", Name));
 				strBuilder.AppendLine(string.Format("{{"));
 				strBuilder.AppendLine(string.Format("get {{ return {0}==null ? \"\" : {0}.Value.ToString(CultureInfo.InvariantCulture); }}", Name));
@@ -29,7 +29,7 @@ namespace XmlToSerialisableClass.Attributes
 			}
 			else
 			{
-				strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", Name));
+				strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", XmlName));
 				strBuilder.AppendLine(string.Format("public int {0}  {{ get; set; }}", Name));
 			}
 

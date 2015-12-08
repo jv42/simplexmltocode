@@ -19,7 +19,7 @@ namespace XmlToSerialisableClass.Attributes
 
 			strBuilder.AppendLine(string.Format("[XmlIgnore]"));
 			strBuilder.AppendLine(string.Format("public bool{0} {1} {{ get; set; }}", Type.nullable ? "?" : "", Name));
-			strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", Name));
+			strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", XmlName));
 			strBuilder.AppendLine(string.Format("public string {0}String", Name));
 			strBuilder.AppendLine(string.Format("{{"));
 
