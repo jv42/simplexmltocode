@@ -1,0 +1,35 @@
+﻿using System;
+using System.ComponentModel;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using System.Collections.Generic;
+using System.Globalization;
+
+namespace ##NAMESPACE##
+{
+	/// <summary>
+    /// The <see cref="##ELEMENTNAME##"/> class.
+    /// </summary>
+    ##ELEMENTNAMESPACE##
+    public class ##ELEMENTNAME##
+    {
+        #region Attributes
+		
+        ##ATTRIBUTES##
+		
+        #endregion
+
+        #region Elements
+		
+        ##ELEMENTS##
+		
+        #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="##ELEMENTNAME##"/> class.
+        /// </summary>
+        public ##ELEMENTNAME##()
+        {
+        }
+    }
+}

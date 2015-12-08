@@ -7,13 +7,21 @@ using System.Globalization;
 
 namespace ##NAMESPACE##
 {
-	##ELEMENTNAMESPACE##
-	public class ##ELEMENTNAME##
-	{
-		##ATTRIBUTES##
-		##ELEMENTS##
-		// CONSTRUCTOR
-		public ##ELEMENTNAME##()
-		{}
-	}
+	/// <summary>
+    /// The <see cref="##ELEMENTNAME##"/> class.
+    /// </summary>
+    ##ELEMENTNAMESPACE##
+    public class ##ELEMENTNAME##
+    {
+        ##ATTRIBUTES##
+				
+        ##ELEMENTS##
+		
+        /// <summary>
+        /// Initializes a new instance of the <see cref="##ELEMENTNAME##"/> class.
+        /// </summary>
+        public ##ELEMENTNAME##()
+        {
+        }
+    }
 }

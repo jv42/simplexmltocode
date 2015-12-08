@@ -14,7 +14,8 @@ My own goals are:
  
  * reducing output clutter
  * cleaning up code
- * documenting code
+ * documenting tool code
+ * documenting output code
  * adding more UI options
  * adding progress UI
 
