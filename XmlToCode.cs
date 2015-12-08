@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -219,23 +220,30 @@ namespace XmlToSerialisableClass
         {
             var allElements = GetAllElements(element);
 
+            int groups = 0;
             foreach (var element1 in allElements)
             {
                 var elementsWithThisName = allElements.Where(e => e.Name == element1.Name).ToList();
 
+                if (elementsWithThisName.Count > 1)
+                {
+                    System.Diagnostics.Debug.WriteLine("Found dupe: {0} [{1}]", element1.Name, elementsWithThisName.Count);
+                    groups++;
+                }
+
                 var count = 1;
-                while (elementsWithThisName.Count() > 1)
+                while (elementsWithThisName.Count > 1)
                 {
                     foreach (var element2 in elementsWithThisName)
                     {
                         element2.Name = GetParentsAsString(element2.OriginalElement, count);
+                        System.Diagnostics.Debug.WriteLine("Renamed dupe: {0}=>{1}", element1.Name, element2.Name);
                     }
                     elementsWithThisName = allElements.Where(e => e.Name == element1.Name).ToList();
                     count++;
                 }
             }
         }
-
 
         private List<Element> GetAllElements(Element element)
         {
