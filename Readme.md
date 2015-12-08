@@ -4,13 +4,24 @@ Xml2Code
 *XML to C# Class generator*
 
 Note:
----
+-----
 
 I have imported this project from [Sourceforge](http://sourceforge.net/projects/simplexmltocode/) to contribute publicly my own changes over the original.
 
 The reported last update there is 2013-03-26 (as I'm writing this).
 
----
+My own goals are:
+ 
+ * reducing output clutter
+ * cleaning up code
+ * documenting code
+ * adding more UI options
+ * adding progress UI
+
+----------------------------------------------
+
+Description
+===========
 
 
 This project started off as just something I wanted to do quickly to help me generate some classes
@@ -40,19 +51,19 @@ Comments will break the system
 To Do
 =====
 
-Perhaps instead of using nullables it may be best to use XML Default Values?
-Clean up the code into logical classes and separate all the various functionalities more cleverly.
-Take into consideration different Charsets
-Take into consideration SchemaLocations
-Take into consideration XML Namespaces
-Commenting and autosence
-Allow URL as XML input
-Remember previous settings (date format, namespace, output directory)
-Lots of commenting
-Lots of testing with various XML docs
-Allow commenting in XML
- - Allow comments such as Required, Optional, Enumerable, Enum({strval=intval}, {strval=intval}, {strval=intval}), Type(string/int/etc...)
-Generate Service methods to build the full XML object
+ * Perhaps instead of using nullables it may be best to use XML Default Values?
+ * Clean up the code into logical classes and separate all the various functionalities more cleverly.
+ * Take into consideration different Charsets
+ * Take into consideration SchemaLocations
+ * Take into consideration XML Namespaces
+ * Commenting and autosence
+ * Allow URL as XML input
+ * Remember previous settings (date format, namespace, output directory)
+ * Lots of commenting
+ * Lots of testing with various XML docs
+ * Allow commenting in XML
+ 	- Allow comments such as Required, Optional, Enumerable, Enum({strval=intval}, {strval=intval}, {strval=intval}), Type(string/int/etc...)
+ * Generate Service methods to build the full XML object
 
 PLEASE NOTE
 ===========
