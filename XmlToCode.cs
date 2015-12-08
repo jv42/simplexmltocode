@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define USE_LEGACY_CLASS_CONFLICT_POLICY
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -220,6 +222,7 @@ namespace XmlToSerialisableClass
         {
             var allElements = GetAllElements(element);
 
+#if USE_LEGACY_CLASS_CONFLICT_POLICY
             int groups = 0;
             foreach (var element1 in allElements)
             {
@@ -243,6 +246,43 @@ namespace XmlToSerialisableClass
                     count++;
                 }
             }
+#else
+            var dupes = allElements.GroupBy((elem) => elem.Name).Where((group) => group.Count() > 1).ToList();
+
+            foreach (var dupeGroup in dupes)
+            {
+                // Note: generate a 'key' comprising all the info about the element as the sum of its parts
+                var dupeXmls = dupeGroup.Select((d) => Tuple.Create(d, 
+                    d.ParentToString() +                        
+                    String.Join(" + ", from elem in d.Elements
+                                       orderby elem.Name        
+                                       select elem.ToString()) +
+                    String.Join(" - ", from attr in d.Attributes
+                                       orderby attr.Name
+                                       select attr.ToString())));
+
+                var uniqueXmls = dupeXmls.GroupBy(d => d.Item2).ToList();
+
+                Console.WriteLine("Found dupe set: {0} [{1}] with {2} unique XML", dupeGroup.Key, dupeGroup.Count(), uniqueXmls.Count);
+
+                // Do not rename if all same XML => will overwrite Count-1 times the output CS file, don't care
+                if (uniqueXmls.Count == 1)
+                {
+                    continue;
+                }
+
+                // Generate unique numbered names
+                int add = 1;
+                foreach (var unique in uniqueXmls)
+                {
+                    foreach (var elem in unique)
+                    {
+                        elem.Item1.Name = elem.Item1.Name + add;
+                    }
+                    add++;
+                }
+            }
+#endif
         }
 
         private List<Element> GetAllElements(Element element)
