@@ -6,7 +6,7 @@ Xml2Code
 Note:
 ---
 
-I have imported this project from [Sourceforge](url) to contribute publicly my own changes over the original.
+I have imported this project from [Sourceforge](http://sourceforge.net/projects/simplexmltocode/) to contribute publicly my own changes over the original.
 
 The reported last update there is 2013-03-26 (as I'm writing this).
 
