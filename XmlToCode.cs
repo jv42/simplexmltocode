@@ -322,11 +322,10 @@ namespace XmlToSerialisableClass
             }
             classCode = classCode.Replace("##ELEMENTNAMESPACE##", string.Join("\n", nameSpaceCode));
 
-            var attributesCode = new List<string>();
-            foreach (var attribute in element.Attributes)
-                attributesCode.Add(attribute.ToString());
+            var attributesCode = from attr in element.Attributes
+                                 select attr.ToString();
 
-            classCode = classCode.Replace("##ATTRIBUTES##", attributesCode.Any() ? "// ATTRIBUTES\n" + string.Join("\n", attributesCode) : "");
+            classCode = classCode.Replace("##ATTRIBUTES##", attributesCode.Any() ? String.Join(Environment.NewLine, attributesCode) : String.Empty);
 
             var elementsCode = new List<string>();
             foreach (var elem in element.Elements)
@@ -336,11 +335,12 @@ namespace XmlToSerialisableClass
             if (!elementsCode.Any())
                 elementsCode.Add(element.ToString());
 
-            classCode = classCode.Replace("##ELEMENTS##", elementsCode.Any() ? "// ELEMENTS\n" + string.Join("\n", elementsCode) : "");
+            classCode = classCode.Replace("##ELEMENTS##", elementsCode.Any() ? String.Join(Environment.NewLine, elementsCode) : String.Empty);
 
-            var classFile = new StreamWriter(_outputFolder + "\\" + className + ".cs", false);
-            classFile.Write(Format.Code(classCode));
-            classFile.Close();
+            using (var classFile = new StreamWriter(Path.Combine(_outputFolder, className + ".cs"), false))
+            {
+                classFile.Write(Format.Code(classCode));
+            }
 
             foreach (var el in element.Elements)
             {
