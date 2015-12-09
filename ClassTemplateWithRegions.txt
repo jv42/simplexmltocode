@@ -15,14 +15,12 @@ namespace ##NAMESPACE##
     {
         #region Attributes
 		
-        ##ATTRIBUTES##
-		
+        ##ATTRIBUTES##		
         #endregion
 
         #region Elements
 		
         ##ELEMENTS##
-		
         #endregion
 
         /// <summary>
