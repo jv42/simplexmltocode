@@ -25,7 +25,7 @@ namespace XmlToSerialisableClass.Attributes
 
 			if (Type.nullable)
 			{
-				strBuilder.AppendLine(string.Format("get {{ return {0}==null ? \"\" : {0}.Value ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
+				strBuilder.AppendLine(string.Format("get {{ return {0}==null ? String.Empty : {0}.Value ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
 				strBuilder.AppendLine(string.Format("set"));
 				strBuilder.AppendLine(string.Format("{{"));
 				strBuilder.AppendLine(string.Format("if (String.IsNullOrWhiteSpace(value)) {0} = null;", Name));

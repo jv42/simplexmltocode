@@ -19,7 +19,7 @@ namespace XmlToSerialisableClass.Attributes
 				strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", XmlName));
 				strBuilder.AppendLine(string.Format("public string {0}String", Name));
 				strBuilder.AppendLine(string.Format("{{"));
-				strBuilder.AppendLine(string.Format("get {{ return {0}==null ? \"\" : {0}.Value.ToString(CultureInfo.InvariantCulture); }}", Name));
+				strBuilder.AppendLine(string.Format("get {{ return {0}==null ? String.Empty : {0}.Value.ToString(CultureInfo.InvariantCulture); }}", Name));
 				strBuilder.AppendLine(string.Format("set"));
 				strBuilder.AppendLine(string.Format("{{"));
 				strBuilder.AppendLine(string.Format("if (String.IsNullOrWhiteSpace(value)) {0} = null;", Name));

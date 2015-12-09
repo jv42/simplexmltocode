@@ -27,7 +27,7 @@ namespace XmlToSerialisableClass.Elements
 				strBuilder.AppendLine(string.Format("[XmlText]"));
 				strBuilder.AppendLine(string.Format("public string ValueString"));
 				strBuilder.AppendLine(string.Format("{{"));
-				strBuilder.AppendLine(string.Format("get {{ return Value==null ? \"\" : Value.Value.ToString(CultureInfo.InvariantCulture); }}"));
+				strBuilder.AppendLine(string.Format("get {{ return Value==null ? String.Empty : Value.Value.ToString(CultureInfo.InvariantCulture); }}"));
 				strBuilder.AppendLine(string.Format("set"));
 				strBuilder.AppendLine(string.Format("{{"));
 				strBuilder.AppendLine(string.Format("if (String.IsNullOrWhiteSpace(value)) Value = null;"));

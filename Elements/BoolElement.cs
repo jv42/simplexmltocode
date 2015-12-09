@@ -34,7 +34,7 @@ namespace XmlToSerialisableClass.Elements
 
 			if (Type.nullable)
 			{
-				strBuilder.AppendLine(string.Format("get {{ return Value==null ? \"\" : Value.Value ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
+				strBuilder.AppendLine(string.Format("get {{ return Value==null ? String.Empty : Value.Value ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
 				strBuilder.AppendLine(string.Format("set"));
 				strBuilder.AppendLine(string.Format("{{"));
 				strBuilder.AppendLine(string.Format("if (String.IsNullOrWhiteSpace(value)) Value = null;"));
