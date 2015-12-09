@@ -24,13 +24,16 @@ namespace XmlToSerialisableClass
         private readonly Element _newRoot;
         private readonly XElement _oldRoot;
 
-        public XmlToCode(XElement oldRoot, string nameSpace, string outputFolder, string dateFormat, string dateTimeFormat)
+        private readonly string _classTemplate;
+
+        public XmlToCode(XElement oldRoot, string nameSpace, string outputFolder, string dateFormat, string dateTimeFormat, string classTemplate)
         {
             _oldRoot = oldRoot;
             _namespace = nameSpace;
             _outputFolder = outputFolder;
             _dateFormat = dateFormat;
             _dateTimeFormat = dateTimeFormat;
+            _classTemplate = classTemplate;
 
             _helper = new StringHelpers();
 
@@ -306,13 +309,11 @@ namespace XmlToSerialisableClass
 
         private void ConvertToFiles(Element element)
         {
-            var className = element.Name;
-
-            var classTemplate = new StreamReader("ClassTemplate.txt");
-            var classCode = classTemplate.ReadToEnd();
-            classTemplate.Close();
+            var classCode = _classTemplate;
 
             classCode = classCode.Replace("##NAMESPACE##", _namespace);
+
+            var className = element.Name;
             classCode = classCode.Replace("##ELEMENTNAME##", className);
 
             var nameSpaceCode = new List<string>();

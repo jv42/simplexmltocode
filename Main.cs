@@ -116,7 +116,9 @@ namespace XmlToSerialisableClass
                 return;
             }
 
-            new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text);
+            var classTemplate = File.ReadAllText("ClassTemplateWithRegions.txt");
+
+            new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate);
             MessageBox.Show("Generation Complete", "Success", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
