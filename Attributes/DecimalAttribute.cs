@@ -31,7 +31,7 @@ namespace XmlToSerialisableClass.Attributes
             else
             {
                 strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", XmlName));
-                strBuilder.AppendLine(string.Format("public decimal {0}  {{ get; set; }}", Name));
+                strBuilder.AppendLine(string.Format("public decimal {0} {{ get; set; }}", Name));
             }
 
             return strBuilder.ToString();
