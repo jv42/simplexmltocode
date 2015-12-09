@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace ##NAMESPACE##
 {
 	/// <summary>
-    /// The <see cref="##ELEMENTNAME##"/> class.
+    /// The ##ELEMENTNAME## class.
     /// </summary>
     ##ELEMENTNAMESPACE##
     public class ##ELEMENTNAME##
