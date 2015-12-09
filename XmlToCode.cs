@@ -320,7 +320,7 @@ namespace XmlToSerialisableClass
             {
                 nameSpaceCode.Add(string.Format("[XmlTypeAttribute(AnonymousType = true, Namespace = \"{0}\")]", namespaceAttribute.Value));
             }
-            classCode = classCode.Replace("##ELEMENTNAMESPACE##", string.Join("\n", nameSpaceCode));
+            classCode = classCode.Replace("##ELEMENTNAMESPACE##", string.Join(Environment.NewLine, nameSpaceCode));
 
             var attributesCode = from attr in element.Attributes
                                  select attr.ToString();
@@ -331,7 +331,7 @@ namespace XmlToSerialisableClass
             foreach (var elem in element.Elements)
                 elementsCode.Add(elem.ParentToString());
 
-            //element.Elements.Aggregate("", (current, elem) => current + (elem + "\n"));
+            //element.Elements.Aggregate("", (current, elem) => current + (elem + Environment.NewLine));
             if (!elementsCode.Any())
                 elementsCode.Add(element.ToString());
 
