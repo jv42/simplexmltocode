@@ -38,7 +38,7 @@ namespace XmlToSerialisableClass
             _helper = new StringHelpers();
 
             var newElement = ConvertXElementToElement(oldRoot);
-            _newRoot = new Element(newElement.Name) { IsRoot = true };
+            _newRoot = new Element(newElement.XmlName) { IsRoot = true };
 
             ConsolidateElements(_newRoot, newElement);
 
@@ -255,10 +255,10 @@ namespace XmlToSerialisableClass
             foreach (var dupeGroup in dupes)
             {
                 // Note: generate a 'key' comprising all the info about the element as the sum of its parts
-                var dupeXmls = dupeGroup.Select((d) => Tuple.Create(d, 
-                    d.ParentToString() +                        
+                var dupeXmls = dupeGroup.Select((d) => Tuple.Create(d,
+                    d.ParentToString() +
                     String.Join(" + ", from elem in d.Elements
-                                       orderby elem.Name        
+                                       orderby elem.Name
                                        select elem.ToString()) +
                     String.Join(" - ", from attr in d.Attributes
                                        orderby attr.Name
@@ -317,6 +317,9 @@ namespace XmlToSerialisableClass
             classCode = classCode.Replace("##ELEMENTNAME##", className);
 
             var nameSpaceCode = new List<string>();
+            if (element.IsRoot && !String.Equals(element.Name, element.XmlName))
+                nameSpaceCode.Add(string.Format("[XmlRoot(\"{0}\")]", element.XmlName));
+
             foreach (var namespaceAttribute in element.NamespaceAttributes.Where(el => string.IsNullOrWhiteSpace(el.Name.NamespaceName)))
             {
                 nameSpaceCode.Add(string.Format("[XmlTypeAttribute(AnonymousType = true, Namespace = \"{0}\")]", namespaceAttribute.Value));
@@ -326,6 +329,7 @@ namespace XmlToSerialisableClass
             var attributesCode = from attr in element.Attributes
                                  select attr.ToString();
 
+            // TODO: this causes an empty line when no attribute is added
             classCode = classCode.Replace("##ATTRIBUTES##", attributesCode.Any() ? String.Join(Environment.NewLine, attributesCode) : String.Empty);
 
             var elementsCode = new List<string>();
