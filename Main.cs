@@ -118,8 +118,13 @@ namespace XmlToSerialisableClass
 
             var classTemplate = File.ReadAllText("ClassTemplateWithRegions.txt");
 
-            new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate);
-            MessageBox.Show("Generation Complete", "Success", MessageBoxButtons.OK, MessageBoxIcon.None);
+            var converter = new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate);
+
+            converter.ConvertAsync().ContinueWith((_) =>
+            {
+                MessageBox.Show("Generation Complete", "Success", MessageBoxButtons.OK, MessageBoxIcon.None);
+            }
+            );
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

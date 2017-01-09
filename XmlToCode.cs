@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using XmlToSerialisableClass.Attributes;
 using XmlToSerialisableClass.Elements;
@@ -14,18 +15,30 @@ namespace XmlToSerialisableClass
 {
     public class XmlToCode
     {
-        private StringHelpers _helper;
+        private readonly StringHelpers _helper;
 
         private readonly string _namespace;
         private readonly string _outputFolder;
         private readonly string _dateFormat;
         private readonly string _dateTimeFormat;
 
-        private readonly Element _newRoot;
         private readonly XElement _oldRoot;
 
         private readonly string _classTemplate;
 
+
+        private Element _newRoot;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlToCode"/> class.
+        /// </summary>
+        /// <param name="oldRoot">The old root.</param>
+        /// <param name="nameSpace">The name space.</param>
+        /// <param name="outputFolder">The output folder.</param>
+        /// <param name="dateFormat">The date format.</param>
+        /// <param name="dateTimeFormat">The date time format.</param>
+        /// <param name="classTemplate">The class template.</param>
         public XmlToCode(XElement oldRoot, string nameSpace, string outputFolder, string dateFormat, string dateTimeFormat, string classTemplate)
         {
             _oldRoot = oldRoot;
@@ -36,18 +49,37 @@ namespace XmlToSerialisableClass
             _classTemplate = classTemplate;
 
             _helper = new StringHelpers();
+        }
 
-            var newElement = ConvertXElementToElement(oldRoot);
-            _newRoot = new Element(newElement.XmlName) { IsRoot = true };
+        /// <summary>
+        /// Start the conversion.
+        /// </summary>
+        /// <returns>An awaitable Task</returns>
+        public async Task ConvertAsync()
+        {
+            await Task.Run(() =>
+            {
+                var newElement = ConvertXElementToElement(_oldRoot);
+                _newRoot = new Element(newElement.XmlName) { IsRoot = true };
 
-            ConsolidateElements(_newRoot, newElement);
+                ConsolidateElements(_newRoot, newElement);
 
-            _newRoot.Attributes.AddRange(newElement.Attributes);
-            _newRoot.NamespaceAttributes.AddRange(newElement.NamespaceAttributes);
+                _newRoot.Attributes.AddRange(newElement.Attributes);
+                _newRoot.NamespaceAttributes.AddRange(newElement.NamespaceAttributes);
+            }
+            );
 
-            RenameConflictingClasses(_newRoot);
+            await Task.Run(() =>
+            {
+                RenameConflictingClasses(_newRoot);
+            }
+            );
 
-            ConvertToFiles(_newRoot);
+            await Task.Run(() =>
+            {
+                ConvertToFiles(_newRoot);
+            }
+            );
         }
 
         private Element ConvertXElementToElement(XElement element)
