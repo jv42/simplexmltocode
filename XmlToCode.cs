@@ -97,14 +97,16 @@ namespace XmlToSerialisableClass
         private Element ConvertXElementToElement(XElement element)
         {
             var elementValues = new List<string>();
+
+            // Leaf element?
             if (!element.Elements().Any())
             {
                 var tElem = _oldRoot.Descendants(element.Name).Where(x => GetParentsAsString(x, -1) == GetParentsAsString(element, -1) && !x.Elements().Any()).Select(e => e.Value);
                 elementValues.AddRange(tElem);
             }
 
+            // Create the element
             var xElementList = _oldRoot.Descendants(element.Name).GroupBy(el => el.Parent).Select(g => new { g.Key, Count = g.Count() }).Where(x => x.Count > 1);
-
             Element returnElement;
             var elementName = element.Name.LocalName;
             var elementType = DataType.GetDataTypeFromList(elementValues, _dateFormat, _dateTimeFormat);
@@ -139,11 +141,13 @@ namespace XmlToSerialisableClass
             returnElement.Type = elementType;
             returnElement.OriginalElement = element;
 
+            // Recursive calls for element's children
             foreach (var xElement in element.Elements())
             {
                 returnElement.Elements.Add(ConvertXElementToElement(xElement));
             }
 
+            // Treat element's attributes
             foreach (var xAttribute in element.Attributes())
             {
                 var tElements = _oldRoot.DescendantsAndSelf(element.Name).Where(x => GetParentsAsString(x, -1) == GetParentsAsString(element, -1)).ToList();
