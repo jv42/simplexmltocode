@@ -19,10 +19,6 @@ namespace XmlToSerialisableClass
 
             txtNamespace.Text = Properties.Settings.Default.NameSpace;
 
-            txtXmlFileLocation.TextChanged += XmlFileChanged;
-            txtDateFormat.TextChanged += DateFormatSampleChanged;
-            txtDateTimeFormat.TextChanged += DateTimeFormatSampleChanged;
-
             _hasSetManualOutputPath = false;
 
         }
@@ -120,7 +116,7 @@ namespace XmlToSerialisableClass
 
             var converter = new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate);
 
-            converter.ConvertAsync().ContinueWith((_) =>
+            converter.ConvertAsync((log) => AddLineToOutputBox(log)).ContinueWith((_) =>
             {
                 MessageBox.Show("Generation Complete", "Success", MessageBoxButtons.OK, MessageBoxIcon.None);
             }
@@ -130,6 +126,39 @@ namespace XmlToSerialisableClass
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        #region Log management
+
+        private void AddLineToOutputBox(string line)
+        {
+            if (textBoxOutput.InvokeRequired)
+            {
+                this.Invoke(() => DoAddLine(line));
+            }
+            else
+            {
+                DoAddLine(line);
+            }
+        }
+
+        private void DoAddLine(string line)
+        {
+            textBoxOutput.AppendText(line);
+            textBoxOutput.AppendText(Environment.NewLine);
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Provide extension methods dealing with System.Windows.Forms.Control.
+    /// </summary>
+    public static class ControlExtensions
+    {
+        public static void Invoke(this Control control, Action action)
+        {
+            control.Invoke(action);
         }
     }
 }

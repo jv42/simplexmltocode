@@ -54,9 +54,15 @@ namespace XmlToSerialisableClass
         /// <summary>
         /// Start the conversion.
         /// </summary>
-        /// <returns>An awaitable Task</returns>
-        public async Task ConvertAsync()
+        /// <param name="logMethod">The log method.</param>
+        /// <returns>
+        /// An awaitable Task
+        /// </returns>
+        public async Task ConvertAsync(Action<string> logMethod)
         {
+            logMethod("Starting conversion...");
+
+            logMethod("Reading elements...");
             await Task.Run(() =>
             {
                 var newElement = ConvertXElementToElement(_oldRoot);
@@ -69,17 +75,23 @@ namespace XmlToSerialisableClass
             }
             );
 
+            logMethod("Resolving conflicts...");
+
             await Task.Run(() =>
             {
                 RenameConflictingClasses(_newRoot);
             }
             );
 
+            logMethod("Creating files...");
+
             await Task.Run(() =>
             {
                 ConvertToFiles(_newRoot);
             }
             );
+
+            logMethod("Done!");
         }
 
         private Element ConvertXElementToElement(XElement element)
