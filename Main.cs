@@ -116,9 +116,12 @@ namespace XmlToSerialisableClass
 
             var converter = new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate);
 
-            converter.ConvertAsync((log) => AddLineToOutputBox(log)).ContinueWith((_) =>
+            converter.ConvertAsync((log) => AddLineToOutputBox(log)).ContinueWith((task) =>
             {
-                MessageBox.Show("Generation Complete", "Success", MessageBoxButtons.OK, MessageBoxIcon.None);
+                if (task.IsFaulted)
+                    MessageBox.Show("Error during generation: " + task.Exception?.GetInnermost()?.Message ?? "unknown error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                    MessageBox.Show("Generation Complete", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             );
         }
@@ -159,6 +162,25 @@ namespace XmlToSerialisableClass
         public static void Invoke(this Control control, Action action)
         {
             control.Invoke(action);
+        }
+    }
+
+    /// <summary>
+    /// Provide extension methods dealing with System.Exception.
+    /// </summary>
+    public static class ExceptionExtensions
+    {
+        /// <summary>
+        /// Gets the innermost exception.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        /// <returns></returns>
+        public static Exception GetInnermost(this Exception ex)
+        {
+            if (ex.InnerException == null)
+                return ex;
+
+            return GetInnermost(ex.InnerException);
         }
     }
 }
