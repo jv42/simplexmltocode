@@ -215,6 +215,9 @@ namespace XmlToSerialisableClass
                 returnElement.Attributes.Add(thisAttribute);
             }
 
+            _logMethod($"Processing done on element '{element.Name.LocalName}'. Found {returnElement.Attributes.Count} attribute(s) and {returnElement.Elements.Count} child element(s).");
+
+
             return returnElement;
         }
 
