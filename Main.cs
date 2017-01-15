@@ -114,9 +114,9 @@ namespace XmlToSerialisableClass
 
             var classTemplate = File.ReadAllText("ClassTemplateWithRegions.txt");
 
-            var converter = new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate);
+            var converter = new XmlToCode(_xmlFile.Root, txtNamespace.Text, txtOutputDirectory.Text, txtDateFormat.Text, txtDateTimeFormat.Text, classTemplate, (log) => AddLineToOutputBox(log));
 
-            converter.ConvertAsync((log) => AddLineToOutputBox(log)).ContinueWith((task) =>
+            converter.ConvertAsync().ContinueWith((task) =>
             {
                 if (task.IsFaulted)
                     MessageBox.Show("Error during generation: " + task.Exception?.GetInnermost()?.Message ?? "unknown error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

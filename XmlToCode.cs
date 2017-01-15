@@ -29,6 +29,7 @@ namespace XmlToSerialisableClass
 
         private Element _newRoot;
 
+        private Action<string> _logMethod;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlToCode"/> class.
@@ -39,7 +40,7 @@ namespace XmlToSerialisableClass
         /// <param name="dateFormat">The date format.</param>
         /// <param name="dateTimeFormat">The date time format.</param>
         /// <param name="classTemplate">The class template.</param>
-        public XmlToCode(XElement oldRoot, string nameSpace, string outputFolder, string dateFormat, string dateTimeFormat, string classTemplate)
+        public XmlToCode(XElement oldRoot, string nameSpace, string outputFolder, string dateFormat, string dateTimeFormat, string classTemplate, Action<string> logMethod)
         {
             _oldRoot = oldRoot;
             _namespace = nameSpace;
@@ -47,6 +48,11 @@ namespace XmlToSerialisableClass
             _dateFormat = dateFormat;
             _dateTimeFormat = dateTimeFormat;
             _classTemplate = classTemplate;
+
+            if (logMethod != null)
+                _logMethod = logMethod;
+            else
+                _logMethod = (str) => { };
 
             _helper = new StringHelpers();
         }
@@ -58,11 +64,11 @@ namespace XmlToSerialisableClass
         /// <returns>
         /// An awaitable Task
         /// </returns>
-        public async Task ConvertAsync(Action<string> logMethod)
+        public async Task ConvertAsync()
         {
-            logMethod("Starting conversion...");
+            _logMethod("Starting conversion...");
 
-            logMethod("Reading elements...");
+            _logMethod("Reading elements...");
             await Task.Run(() =>
             {
                 var newElement = ConvertXElementToElement(_oldRoot);
@@ -75,7 +81,7 @@ namespace XmlToSerialisableClass
             }
             );
 
-            logMethod("Resolving conflicts...");
+            _logMethod("Resolving conflicts...");
 
             await Task.Run(() =>
             {
@@ -83,7 +89,7 @@ namespace XmlToSerialisableClass
             }
             );
 
-            logMethod("Creating files...");
+            _logMethod("Creating files...");
 
             await Task.Run(() =>
             {
@@ -91,12 +97,14 @@ namespace XmlToSerialisableClass
             }
             );
 
-            logMethod("Done!");
+            _logMethod("Done!");
         }
 
         private Element ConvertXElementToElement(XElement element)
         {
             var elementValues = new List<string>();
+
+            _logMethod($"Processing element '{element.Name.LocalName}'...");
 
             // Leaf element?
             if (!element.Elements().Any())
@@ -141,6 +149,8 @@ namespace XmlToSerialisableClass
             returnElement.IsEnumerable = xElementList.Any();
             returnElement.Type = elementType;
             returnElement.OriginalElement = element;
+
+            _logMethod($"Detected type: {elementType.DataType}, is enumerable: {returnElement.IsEnumerable}");
 
             // Recursive calls for element's children
             foreach (var xElement in element.Elements())
@@ -315,7 +325,7 @@ namespace XmlToSerialisableClass
 
                 var uniqueXmls = dupeXmls.GroupBy(d => d.Item2).ToList();
 
-                Console.WriteLine("Found dupe set: {0} [{1}] with {2} unique XML", dupeGroup.Key, dupeGroup.Count(), uniqueXmls.Count);
+                _logMethod(String.Format("Found dupe set: {0} [{1}] with {2} unique XML", dupeGroup.Key, dupeGroup.Count(), uniqueXmls.Count));
 
                 // Do not rename if all same XML => will overwrite Count-1 times the output CS file, don't care
                 if (uniqueXmls.Count == 1)
@@ -395,6 +405,8 @@ namespace XmlToSerialisableClass
             {
                 classFile.Write(Format.Code(classCode));
             }
+
+            _logMethod($"Created file for class '{className}'.");
 
             foreach (var el in element.Elements)
             {
