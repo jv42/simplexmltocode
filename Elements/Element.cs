@@ -53,11 +53,25 @@ namespace XmlToSerialisableClass.Elements
 
             strBuilder.AppendLine(string.Format("[XmlElement(\"{0}\")]", XmlName));
             if (Enumerable)
-                strBuilder.AppendLine(string.Format("public List<{0}> {0} {{ get; set; }}", Name));
+                strBuilder.AppendLine(string.Format("public List<{0}> {0}s {{ get; set; }}", Name));
             else
                 strBuilder.AppendLine(string.Format("public {0} {0} {{ get; set; }}", Name));
 
             return strBuilder.ToString();
+        }
+
+        public Element FindElement(XElement element)
+        {
+            if (OriginalElement == element)
+                return this;
+
+            foreach (var child in Elements)
+            {
+                var found = child.FindElement(element);
+                if (found != null)
+                    return found;
+            }
+            return null;
         }
     }
 }
