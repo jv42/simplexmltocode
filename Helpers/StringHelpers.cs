@@ -42,5 +42,16 @@ namespace XmlToSerialisableClass.Helpers
             }
             return _sb.ToString();
         }
+
+        /// <summary>
+        /// Makes plural variant of name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The plural of name</returns>
+        public string MakePlural(string name)
+        {
+            // TODO: some rules
+            return name + "s";
+        }
     }
 }

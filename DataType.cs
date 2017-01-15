@@ -103,7 +103,8 @@ namespace XmlToSerialisableClass
 
         public static DataType GetDataTypeFromList(List<string> values, string dateFormat, string dateTimeFormat)
         {
-            if (!values.Any()) return new DataType { nullable = true, type = Type.@string };
+            if (!values.Any())
+                return new DataType { nullable = true, type = Type.@string };
 
             DataType returnType = null;
             foreach (var value in values)

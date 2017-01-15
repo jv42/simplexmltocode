@@ -53,7 +53,7 @@ namespace XmlToSerialisableClass.Elements
 
             strBuilder.AppendLine(string.Format("[XmlElement(\"{0}\")]", XmlName));
             if (Enumerable)
-                strBuilder.AppendLine(string.Format("public List<{0}> {0}s {{ get; set; }}", Name));
+                strBuilder.AppendLine(string.Format("public List<{0}> {1} {{ get; set; }}", Name, _helper.MakePlural(Name)));
             else
                 strBuilder.AppendLine(string.Format("public {0} {0} {{ get; set; }}", Name));
 
