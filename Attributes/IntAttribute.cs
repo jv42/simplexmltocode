@@ -12,7 +12,7 @@ namespace XmlToSerialisableClass.Attributes
 		{
 			var strBuilder = new StringBuilder();
 			
-			if (Type.nullable)
+			if (Type.IsNullable)
 			{
 				strBuilder.AppendLine(string.Format("[XmlIgnore]"));
 				strBuilder.AppendLine(string.Format("public int? {0} {{ get; set; }}", Name));

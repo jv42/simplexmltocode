@@ -18,12 +18,12 @@ namespace XmlToSerialisableClass.Attributes
 			var strBuilder = new StringBuilder();
 
 			strBuilder.AppendLine(string.Format("[XmlIgnore]"));
-			strBuilder.AppendLine(string.Format("public bool{0} {1} {{ get; set; }}", Type.nullable ? "?" : "", Name));
+			strBuilder.AppendLine(string.Format("public bool{0} {1} {{ get; set; }}", Type.IsNullable ? "?" : "", Name));
 			strBuilder.AppendLine(string.Format("[XmlAttribute(\"{0}\")]", XmlName));
 			strBuilder.AppendLine(string.Format("public string {0}String", Name));
 			strBuilder.AppendLine(string.Format("{{"));
 
-			if (Type.nullable)
+			if (Type.IsNullable)
 			{
 				strBuilder.AppendLine(string.Format("get {{ return {0}==null ? String.Empty : {0}.Value ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
 				strBuilder.AppendLine(string.Format("set"));

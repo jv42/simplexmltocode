@@ -27,12 +27,12 @@ namespace XmlToSerialisableClass.Elements
 			var strBuilder = new StringBuilder();
 
 			strBuilder.AppendLine(string.Format("[XmlIgnore]"));
-			strBuilder.AppendLine(string.Format("public DateTime{0} Value {{ get; set; }}", Type.nullable ? "?" : ""));
+			strBuilder.AppendLine(string.Format("public DateTime{0} Value {{ get; set; }}", Type.IsNullable ? "?" : ""));
 			strBuilder.AppendLine(string.Format("[XmlText]"));
 			strBuilder.AppendLine(string.Format("public string ValueString"));
 			strBuilder.AppendLine(string.Format("{{"));
 
-			if (Type.nullable)
+			if (Type.IsNullable)
 			{
 				strBuilder.AppendLine(string.Format("get {{ return Value==null ? String.Empty : Value.Value ? \"{0}\" : \"{1}\"; }}", _trueValue, _falseValue));
 				strBuilder.AppendLine(string.Format("set"));

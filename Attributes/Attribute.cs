@@ -8,7 +8,7 @@ namespace XmlToSerialisableClass.Attributes
         public string XmlName { get { return _xmlName; } }
 
         public string Name { get; set; }
-        public DataType Type { get; set; }
+        public XmlDataType Type { get; set; }
 
         private static readonly StringHelpers _helper;
         static Attribute()

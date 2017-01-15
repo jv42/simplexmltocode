@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace XmlToSerialisableClass
 {
-    public class DataType
+    public class XmlDataType
     {
-        public bool nullable { get; set; }
-        public Type? type { get; set; }
+        public bool IsNullable { get; set; }
+        public Type? DataType { get; set; }
 
         public enum Type
         {
@@ -21,7 +21,7 @@ namespace XmlToSerialisableClass
             Bool     // True / False
         };
 
-        public static bool operator ==(DataType a, DataType b)
+        public static bool operator ==(XmlDataType a, XmlDataType b)
         {
             if (ReferenceEquals(a, b))
                 return true;
@@ -29,23 +29,23 @@ namespace XmlToSerialisableClass
             if (((object)a == null) || ((object)b == null))
                 return false;
 
-            return a.nullable == b.nullable && a.type == b.type;
+            return a.IsNullable == b.IsNullable && a.DataType == b.DataType;
         }
 
-        public static bool operator !=(DataType a, DataType b)
+        public static bool operator !=(XmlDataType a, XmlDataType b)
         {
             return !(a == b);
         }
 
 
 
-        private static DataType GetDataType(string value, string dateFormat, string dateTimeFormat)
+        private static XmlDataType GetDataType(string value, string dateFormat, string dateTimeFormat)
         {
-            var thisType = new DataType { nullable = false, type = null };
+            var thisType = new XmlDataType { IsNullable = false, DataType = null };
 
             // IF EMPTY ASSUME STRING
             if (string.IsNullOrWhiteSpace(value))
-                return new DataType { nullable = true, type = null };
+                return new XmlDataType { IsNullable = true, DataType = null };
 
             // TRY PARSE AS DATE
             if (!string.IsNullOrWhiteSpace(dateFormat))
@@ -57,7 +57,7 @@ namespace XmlToSerialisableClass
                                        DateTimeStyles.None,
                                        out date))
                 {
-                    thisType.type = Type.Date;
+                    thisType.DataType = Type.Date;
                 }
             }
 
@@ -71,7 +71,7 @@ namespace XmlToSerialisableClass
                                        DateTimeStyles.None,
                                        out datetime))
                 {
-                    thisType.type = Type.DateTime;
+                    thisType.DataType = Type.DateTime;
                 }
             }
 
@@ -83,30 +83,30 @@ namespace XmlToSerialisableClass
                 if (isNum)
                 {
                     // DECIMAL OR INTEGER
-                    if (value.Contains(".")) thisType.type = Type.@decimal;
-                    else thisType.type = (num % 1) == 0 ? Type.@int : Type.@decimal;
+                    if (value.Contains(".")) thisType.DataType = Type.@decimal;
+                    else thisType.DataType = (num % 1) == 0 ? Type.@int : Type.@decimal;
                 }
             }
 
             // TRY PARSE AS BOOLEAN
             if (value == "True" || value == "False")
-                thisType.type = Type.Bool;
+                thisType.DataType = Type.Bool;
 
             if (value == "true" || value == "false")
-                thisType.type = Type.@bool;
+                thisType.DataType = Type.@bool;
 
-            if (!string.IsNullOrWhiteSpace(value) && thisType.type == null)
-                thisType.type = Type.@string;
+            if (!string.IsNullOrWhiteSpace(value) && thisType.DataType == null)
+                thisType.DataType = Type.@string;
 
             return thisType;
         }
 
-        public static DataType GetDataTypeFromList(List<string> values, string dateFormat, string dateTimeFormat)
+        public static XmlDataType GetDataTypeFromList(List<string> values, string dateFormat, string dateTimeFormat)
         {
             if (!values.Any())
-                return new DataType { nullable = true, type = Type.@string };
+                return new XmlDataType { IsNullable = true, DataType = Type.@string };
 
-            DataType returnType = null;
+            XmlDataType returnType = null;
             foreach (var value in values)
             {
                 var thisType = GetDataType(value, dateFormat, dateTimeFormat);
@@ -117,58 +117,58 @@ namespace XmlToSerialisableClass
                     returnType = GetBestType(thisType, returnType);
             }
 
-            if (returnType == null || returnType.type == null)
-                returnType = new DataType { nullable = true, type = Type.@string };
+            if (returnType == null || returnType.DataType == null)
+                returnType = new XmlDataType { IsNullable = true, DataType = Type.@string };
 
             return returnType;
         }
 
-        public static DataType GetBestType(DataType type1, DataType type2)
+        public static XmlDataType GetBestType(XmlDataType type1, XmlDataType type2)
         {
-            var returnType = new DataType();
+            var returnType = new XmlDataType();
 
-            if (type1.type == null && type2.type != null)
-                returnType.type = type2.type;
-            else if (type1.type != null && type2.type == null)
-                returnType.type = type1.type;
-            else if (type1.type == type2.type)
-                returnType.type = type1.type;
-            else if (type1.type == Type.@string || type2.type == Type.@string)
-                returnType.type = Type.@string;
-            else if (type1.type == Type.DateTime && type2.type == Type.Date || type1.type == Type.Date && type2.type == Type.DateTime)
-                returnType.type = Type.DateTime;
-            else if (type1.type == Type.@decimal && type2.type == Type.@int || type1.type == Type.@int && type2.type == Type.@decimal)
-                returnType.type = Type.@decimal;
-            else if (type1.type == Type.@bool && type2.type == Type.Bool || type1.type == Type.Bool && type2.type == Type.@bool)
-                returnType.type = Type.@bool;
+            if (type1.DataType == null && type2.DataType != null)
+                returnType.DataType = type2.DataType;
+            else if (type1.DataType != null && type2.DataType == null)
+                returnType.DataType = type1.DataType;
+            else if (type1.DataType == type2.DataType)
+                returnType.DataType = type1.DataType;
+            else if (type1.DataType == Type.@string || type2.DataType == Type.@string)
+                returnType.DataType = Type.@string;
+            else if (type1.DataType == Type.DateTime && type2.DataType == Type.Date || type1.DataType == Type.Date && type2.DataType == Type.DateTime)
+                returnType.DataType = Type.DateTime;
+            else if (type1.DataType == Type.@decimal && type2.DataType == Type.@int || type1.DataType == Type.@int && type2.DataType == Type.@decimal)
+                returnType.DataType = Type.@decimal;
+            else if (type1.DataType == Type.@bool && type2.DataType == Type.Bool || type1.DataType == Type.Bool && type2.DataType == Type.@bool)
+                returnType.DataType = Type.@bool;
             else
-                returnType.type = Type.@string;
+                returnType.DataType = Type.@string;
 
-            returnType.nullable = type1.nullable || type2.nullable;
+            returnType.IsNullable = type1.IsNullable || type2.IsNullable;
 
             return returnType;
         }
 
-        private bool Equals(DataType other)
+        private bool Equals(XmlDataType other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return other.nullable.Equals(nullable) && other.type.Equals(type);
+            return other.IsNullable.Equals(IsNullable) && other.DataType.Equals(DataType);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(DataType)) return false;
-            return Equals((DataType)obj);
+            if (obj.GetType() != typeof(XmlDataType)) return false;
+            return Equals((XmlDataType)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (nullable.GetHashCode() * 397) ^ (type.HasValue ? type.Value.GetHashCode() : 0);
+                return (IsNullable.GetHashCode() * 397) ^ (DataType.HasValue ? DataType.Value.GetHashCode() : 0);
             }
         }
     }

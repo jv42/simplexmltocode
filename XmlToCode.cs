@@ -109,35 +109,36 @@ namespace XmlToSerialisableClass
             var xElementList = _oldRoot.Descendants(element.Name).GroupBy(el => el.Parent).Select(g => new { g.Key, Count = g.Count() }).Where(x => x.Count > 1);
             Element returnElement;
             var elementName = element.Name.LocalName;
-            var elementType = DataType.GetDataTypeFromList(elementValues, _dateFormat, _dateTimeFormat);
-            switch (elementType.type)
+            var elementType = XmlDataType.GetDataTypeFromList(elementValues, _dateFormat, _dateTimeFormat);
+            switch (elementType.DataType)
             {
-                case DataType.Type.Date:
+                case XmlDataType.Type.Date:
                     returnElement = new DateTimeElement(elementName, _dateFormat);
                     break;
-                case DataType.Type.DateTime:
+                case XmlDataType.Type.DateTime:
                     returnElement = new DateTimeElement(elementName, _dateTimeFormat);
                     break;
-                case DataType.Type.Bool:
+                case XmlDataType.Type.Bool:
                     returnElement = new BoolElement(elementName, "True", "False");
                     break;
-                case DataType.Type.@bool:
+                case XmlDataType.Type.@bool:
                     returnElement = new BoolElement(elementName, "true", "false");
                     break;
-                case DataType.Type.@int:
+                case XmlDataType.Type.@int:
                     returnElement = new IntElement(elementName);
                     break;
-                case DataType.Type.@decimal:
+                case XmlDataType.Type.@decimal:
                     returnElement = new DecimalElement(elementName);
                     break;
-                case DataType.Type.@string:
+                case XmlDataType.Type.@string:
                     returnElement = new StringElement(elementName);
                     break;
                 default:
                     returnElement = new Element(elementName);
                     break;
             }
-            returnElement.Enumerable = xElementList.Any();
+
+            returnElement.IsEnumerable = xElementList.Any();
             returnElement.Type = elementType;
             returnElement.OriginalElement = element;
 
@@ -171,28 +172,28 @@ namespace XmlToSerialisableClass
                     continue;
                 }
 
-                var attributeType = DataType.GetDataTypeFromList(attributeValues, _dateFormat, _dateTimeFormat);
-                switch (attributeType.type)
+                var attributeType = XmlDataType.GetDataTypeFromList(attributeValues, _dateFormat, _dateTimeFormat);
+                switch (attributeType.DataType)
                 {
-                    case DataType.Type.Date:
+                    case XmlDataType.Type.Date:
                         thisAttribute = new DateTimeAttribute(attributeName, _dateFormat);
                         break;
-                    case DataType.Type.DateTime:
+                    case XmlDataType.Type.DateTime:
                         thisAttribute = new DateTimeAttribute(attributeName, _dateTimeFormat);
                         break;
-                    case DataType.Type.Bool:
+                    case XmlDataType.Type.Bool:
                         thisAttribute = new BoolAttribute(attributeName, "True", "False");
                         break;
-                    case DataType.Type.@bool:
+                    case XmlDataType.Type.@bool:
                         thisAttribute = new BoolAttribute(attributeName, "true", "false");
                         break;
-                    case DataType.Type.@int:
+                    case XmlDataType.Type.@int:
                         thisAttribute = new IntAttribute(attributeName);
                         break;
-                    case DataType.Type.@decimal:
+                    case XmlDataType.Type.@decimal:
                         thisAttribute = new DecimalAttribute(attributeName);
                         break;
-                    case DataType.Type.@string:
+                    case XmlDataType.Type.@string:
                         thisAttribute = new StringAttribute(attributeName);
                         break;
                     default:
@@ -217,27 +218,27 @@ namespace XmlToSerialisableClass
                 if (tempElement == null) // element missing, add it
                 {
                     var elementName = cElement.XmlName;
-                    switch (cElement.Type.type)
+                    switch (cElement.Type.DataType)
                     {
-                        case DataType.Type.Date:
+                        case XmlDataType.Type.Date:
                             tempElement = new DateTimeElement(elementName, _dateFormat);
                             break;
-                        case DataType.Type.DateTime:
+                        case XmlDataType.Type.DateTime:
                             tempElement = new DateTimeElement(elementName, _dateTimeFormat);
                             break;
-                        case DataType.Type.Bool:
+                        case XmlDataType.Type.Bool:
                             tempElement = new BoolElement(elementName, "True", "False");
                             break;
-                        case DataType.Type.@bool:
+                        case XmlDataType.Type.@bool:
                             tempElement = new BoolElement(elementName, "true", "false");
                             break;
-                        case DataType.Type.@int:
+                        case XmlDataType.Type.@int:
                             tempElement = new IntElement(elementName);
                             break;
-                        case DataType.Type.@decimal:
+                        case XmlDataType.Type.@decimal:
                             tempElement = new DecimalElement(elementName);
                             break;
-                        case DataType.Type.@string:
+                        case XmlDataType.Type.@string:
                             tempElement = new StringElement(elementName);
                             break;
                         default:
@@ -245,7 +246,7 @@ namespace XmlToSerialisableClass
                             break;
                     }
 
-                    tempElement.Enumerable = cElement.Enumerable;
+                    tempElement.IsEnumerable = cElement.IsEnumerable;
                     tempElement.Type = cElement.Type;
                     tempElement.OriginalElement = cElement.OriginalElement;
                     tempElement.NamespaceAttributes = cElement.NamespaceAttributes;
@@ -260,7 +261,7 @@ namespace XmlToSerialisableClass
                         continue;
 
                     var sameAttributes = cElement.Attributes.Where(a => a.Name == attribute.Name).ToList();
-                    var dataType = sameAttributes.Aggregate<Attribute, DataType>(null, (current, sameAttribute) => current == null ? sameAttribute.Type : DataType.GetBestType(current, sameAttribute.Type));
+                    var dataType = sameAttributes.Aggregate<Attribute, XmlDataType>(null, (current, sameAttribute) => current == null ? sameAttribute.Type : XmlDataType.GetBestType(current, sameAttribute.Type));
                     attribute.Type = dataType;
                     tempElement.Attributes.Add(attribute);
                 }

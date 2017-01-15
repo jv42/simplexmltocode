@@ -13,9 +13,9 @@ namespace XmlToSerialisableClass.Elements
         public string XmlName { get { return _xmlName; } }
 
         public string Name { get; set; }
-        public bool Enumerable { get; set; }
+        public bool IsEnumerable { get; set; }
         public bool IsRoot { get; set; }
-        public DataType Type { get; set; }
+        public XmlDataType Type { get; set; }
 
         public List<Attribute> Attributes { get; private set; }
         public List<Element> Elements { get; private set; }
@@ -52,7 +52,7 @@ namespace XmlToSerialisableClass.Elements
             var strBuilder = new StringBuilder();
 
             strBuilder.AppendLine(string.Format("[XmlElement(\"{0}\")]", XmlName));
-            if (Enumerable)
+            if (IsEnumerable)
                 strBuilder.AppendLine(string.Format("public List<{0}> {1} {{ get; set; }}", Name, _helper.MakePlural(Name)));
             else
                 strBuilder.AppendLine(string.Format("public {0} {0} {{ get; set; }}", Name));
